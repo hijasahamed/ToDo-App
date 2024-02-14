@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Homescreen extends StatelessWidget {
-  const Homescreen({super.key});
+class TodoList extends StatelessWidget {
+  const TodoList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         leading: const Icon(Icons.menu,color: Colors.white,),
         centerTitle: true,
@@ -21,7 +22,15 @@ class Homescreen extends StatelessWidget {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.blueGrey[500],),
           ),
         )
-      )
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: (){
+
+        },
+        label:const Icon(Icons.add),
+        elevation: 10,
+        backgroundColor: Colors.lightBlueAccent
+      ),
     );
   }
 }
