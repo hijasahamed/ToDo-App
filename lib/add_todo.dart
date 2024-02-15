@@ -37,16 +37,15 @@ class _AddtodoState extends State<Addtodo> {
                 TextFormField(
                   controller: titlecontroller,
                   maxLines: 1,
-                  maxLength: 50,
                   textCapitalization: TextCapitalization.words,
                   style:const TextStyle(color: Colors.white),
                   decoration:const InputDecoration(label: Text('Title',)), 
                 ),
                 TextFormField(
                   controller: discriptioncontroller,
-                  maxLines:10,
+                  maxLines:1,
                   textCapitalization: TextCapitalization.sentences,
-                  keyboardType: TextInputType.multiline,
+                  // keyboardType: TextInputType.multiline,
                   style:const TextStyle(color: Colors.white),
                   decoration:const InputDecoration(label: Text('Description')),
                 ),
@@ -76,12 +75,27 @@ class _AddtodoState extends State<Addtodo> {
     const url='https://api.nstack.in/v1/todos';
     final uri=Uri.parse(url);
     final response= await http.post(
-      uri,body: jsonEncode(body),
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      uri,
+      body: jsonEncode(body),
+      headers: {'Content-Type': 'application/json'},
     );
-    print(response.statusCode);
-    print(response.body);
+
+    if(response.statusCode==201){
+      print('Creation Success');
+      snackbarmessage('Creation Success');
+      titlecontroller.text='';
+      discriptioncontroller.text='';     
+    }
+    else{
+      print('Creation Failed');
+      snackbarmessage('Creation Failed');
+      print(response.body);
+    }
   }
+
+  void snackbarmessage(String message){
+    final snackbar=SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
 }

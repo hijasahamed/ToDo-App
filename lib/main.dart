@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const  Color.fromARGB(255, 175, 19, 19)), 
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 175, 19, 19)), 
       ),
       home: const TodoList(),
     );
