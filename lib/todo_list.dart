@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:todo_app/add_todo.dart';
-import 'package:http/http.dart' as http;
+import 'package:todo_app/functions.dart';
 
 class TodoList extends StatefulWidget {
   const TodoList({super.key});
@@ -12,10 +10,10 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  List items=[];
+  List todoitemslist=[];
   @override
   void initState() {
-    fetchTodo();
+    getdata();
     super.initState();
   }
   Widget build(BuildContext context) {
@@ -31,25 +29,33 @@ class _TodoListState extends State<TodoList> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: RefreshIndicator(
-            onRefresh: fetchTodo,
-            child: ListView.separated(
-              itemBuilder: (ctx,index){
-                final item=items[index] as Map;
-                return  Container(
-                  height: 80,
-                  width: double.infinity,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.blueGrey[500],),
-                  child: ListTile(
-                    leading: CircleAvatar(child: Text('${index+1}')),
-                    title: Text(item['title']),
-                    subtitle: Text(item['discription']),
-                  ),
+            onRefresh: getdata,
+            child: ValueListenableBuilder(
+              valueListenable: api, 
+              builder: (ctx,items,child){
+                final values=items.toList();
+                if(values.isEmpty){
+                  const Center(
+                    child: Text('No Data',style: TextStyle(color: Colors.white),),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: values.length,
+                  itemBuilder: (ctx,index){
+                    final data=values[index];
+                    return Card(
+                      color: Colors.blueGrey[500],
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          child: Text('${index+1}'),
+                        ),
+                        title: Text(data['title']),
+                        subtitle: Text(data['description']),
+                      ),
+                    );
+                  }
                 );
-              },
-              separatorBuilder: (ctx,index){
-                return const  Divider(color: Colors.transparent,);
-              }, 
-              itemCount: items.length
+              }
             ),
           ),
         )
@@ -72,19 +78,6 @@ class _TodoListState extends State<TodoList> {
     );
   }
 
-  Future<void> fetchTodo()async{
-    final url='https://api.nstack.in/v1/todos?page=1&limit=10';
-    final uri=Uri.parse(url);
-    final response=await http.get(uri);
-    if(response.statusCode==200){
-      final json=jsonDecode(response.body) as Map;
-      final result= json['items'] as List;
-      setState(() {
-        items=result;
-      });
-    }
-    else{
-
-    }
-  }
+  
+  
 }

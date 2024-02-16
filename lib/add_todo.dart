@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:todo_app/functions.dart';
 
 class Addtodo extends StatefulWidget {
   const Addtodo({super.key});
@@ -12,7 +10,7 @@ class Addtodo extends StatefulWidget {
 
 class _AddtodoState extends State<Addtodo> {
   TextEditingController titlecontroller =TextEditingController();
-  TextEditingController discriptioncontroller =TextEditingController();
+  TextEditingController descriptioncontroller =TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +40,7 @@ class _AddtodoState extends State<Addtodo> {
                   decoration:const InputDecoration(label: Text('Title',)), 
                 ),
                 TextFormField(
-                  controller: discriptioncontroller,
+                  controller: descriptioncontroller,
                   maxLines:1,
                   textCapitalization: TextCapitalization.sentences,
                   // keyboardType: TextInputType.multiline,
@@ -52,7 +50,7 @@ class _AddtodoState extends State<Addtodo> {
                 const SizedBox(height: 100,),
                 ElevatedButton(
                   onPressed: (){
-                    submitdata();
+                    postdata(titlecontroller,descriptioncontroller,context);
                   }, 
                   child: const Text('Submit')
                 )
@@ -63,39 +61,4 @@ class _AddtodoState extends State<Addtodo> {
       ),
     );
   }
-
-  Future<void> submitdata()async{
-    final titledata=titlecontroller.text;
-    final discriptiondata=discriptioncontroller.text;
-    final body={
-      "title": titledata,
-      "description": discriptiondata,
-      "is_completed": false
-    };
-    const url='https://api.nstack.in/v1/todos';
-    final uri=Uri.parse(url);
-    final response= await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
-
-    if(response.statusCode==201){
-      print('Creation Success');
-      snackbarmessage('Creation Success');
-      titlecontroller.text='';
-      discriptioncontroller.text='';     
-    }
-    else{
-      print('Creation Failed');
-      snackbarmessage('Creation Failed');
-      print(response.body);
-    }
-  }
-
-  void snackbarmessage(String message){
-    final snackbar=SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  }
-
 }
