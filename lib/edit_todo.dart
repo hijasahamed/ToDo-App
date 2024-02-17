@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/functions.dart';
 
+// ignore: must_be_immutable
 class Edittodo extends StatefulWidget {
    Edittodo({super.key,required this.tododetails});
   dynamic tododetails;
