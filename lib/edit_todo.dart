@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/functions.dart';
 
 class Edittodo extends StatefulWidget {
    Edittodo({super.key,required this.tododetails});
@@ -10,12 +11,12 @@ class Edittodo extends StatefulWidget {
 class _EdittodoState extends State<Edittodo> {
   @override
   void initState() {
-    edittitlecontroller.text=widget.tododetails['title'];
-    editdescriptioncontroller.text=widget.tododetails['description'];
+    editedtitlecontroller.text=widget.tododetails['title'];
+    editeddescriptioncontroller.text=widget.tododetails['description'];
     super.initState();
   }
-  TextEditingController edittitlecontroller = TextEditingController();
-  TextEditingController editdescriptioncontroller = TextEditingController();
+  TextEditingController editedtitlecontroller = TextEditingController();
+  TextEditingController editeddescriptioncontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,14 +36,14 @@ class _EdittodoState extends State<Edittodo> {
         padding: const EdgeInsets.all(20),
         children: [
           TextFormField(
-            controller: edittitlecontroller,
+            controller: editedtitlecontroller,
             maxLines: 1,
               textCapitalization: TextCapitalization.words,
               style:const TextStyle(color: Colors.white),
               decoration:const InputDecoration(label: Text('Title',)),
           ),
           TextFormField(
-            controller: editdescriptioncontroller,
+            controller: editeddescriptioncontroller,
             maxLines: 1,
               textCapitalization: TextCapitalization.words,
               style:const TextStyle(color: Colors.white),
@@ -51,7 +52,7 @@ class _EdittodoState extends State<Edittodo> {
           const SizedBox(height: 100,),
           ElevatedButton(
             onPressed: (){
-              
+              putdata(editedtitlecontroller.text, editeddescriptioncontroller.text, widget.tododetails['_id'].toString(), context);
             },
             style: ElevatedButton.styleFrom(
               fixedSize:const Size(10, 10) 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 // Add data
-Future<void> postdata(titlecontroller, descriptioncontroller, context) async {
+postdata(titlecontroller, descriptioncontroller, context) async {
   final titledata = titlecontroller.text;
   final discriptiondata = descriptioncontroller.text;
   final body = {
@@ -30,18 +30,18 @@ Future<void> postdata(titlecontroller, descriptioncontroller, context) async {
 }
 
 // fetch the data
-ValueNotifier<List> api = ValueNotifier([]);
+ValueNotifier<List> apinotifier= ValueNotifier([]);
 
-Future<void> getdata() async {
+getdata() async {
   const url = 'https://api.nstack.in/v1/todos?page=1&limit=10';
   final uri = Uri.parse(url);
   final response = await http.get(uri);
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body) as Map;
     final result = json['items'] as List<dynamic>;
-    api.value.clear();
-    api.value.addAll(result);
-    api.notifyListeners();
+    apinotifier.value.clear();
+    apinotifier.value.addAll(result);
+    apinotifier.notifyListeners();
   }
 }
 
@@ -82,11 +82,32 @@ deletealertdialogue(context, id) {
 }
 
 // edit data
-
-put(){
-  
+putdata(String title,String description,String id,context)async{
+  final body = {
+    "title": title,
+    "description": description,
+    "is_completed": false
+  };
+  final url = 'https://api.nstack.in/v1/todos/$id';
+  final uri = Uri.parse(url);
+  final response = await http.put(
+    uri,
+    body: jsonEncode(body),
+    headers: {'Content-Type': 'application/json'},
+  );
+  if(response.statusCode != 404){
+    getdata();
+    Navigator.of(context).pop();
+    snackbarmessage('Submitted', context);
+  }
+  else{
+    snackbarmessage('Not Submitted', context);
+  }
 }
 
+
+
+// snackbar messages
 void snackbarmessage(String message, context) {
   final snackbar = SnackBar(content: Text(message));
   ScaffoldMessenger.of(context).showSnackBar(snackbar);

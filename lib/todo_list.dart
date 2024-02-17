@@ -17,6 +17,7 @@ class _TodoListState extends State<TodoList> {
     getdata();
     super.initState();
   }
+  @override
   Widget build(BuildContext context) {
     return  Scaffold(
       backgroundColor: Colors.black,
@@ -30,9 +31,11 @@ class _TodoListState extends State<TodoList> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: RefreshIndicator(
-            onRefresh: getdata,
+            onRefresh: () {
+              return getdata();
+            },
             child: ValueListenableBuilder(
-              valueListenable: api, 
+              valueListenable: apinotifier, 
               builder: (ctx,items,child){
                 final values=items.toList();
                 if(values.isEmpty){
@@ -51,7 +54,7 @@ class _TodoListState extends State<TodoList> {
                         leading: CircleAvatar(
                           child: Text('${index+1}'),
                         ),
-                        title: Text(data['title']),
+                        title: Text(data['title'],),
                         subtitle: Text(data['description']),
                         trailing: PopupMenuButton(
                           onSelected: (v) {
